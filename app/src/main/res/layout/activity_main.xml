@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5">
+    android:background="#1A1A2E">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,18 +12,45 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+        <!-- APP TITLE -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="✅ TaskFlow"
+            android:textColor="#FFFFFF"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-condensed"
+            android:letterSpacing="0.08"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="8dp"/>
+
+        <!-- SUBTITLE -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Stay on top of your day"
+            android:textColor="#CCFFFFFF"
+            android:textSize="13sp"
+            android:fontFamily="sans-serif-light"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- TASK COUNT BAR -->
         <TextView
             android:id="@+id/tvTaskCount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#3F51B5"
-            android:padding="10dp"
+            android:background="#993F51B5"
+            android:padding="12dp"
             android:text="0 tasks remaining"
             android:textColor="@android:color/white"
-            android:textSize="16sp"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-medium"
             android:gravity="center"
             android:layout_marginBottom="12dp"/>
 
+        <!-- RECYCLER VIEW -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
@@ -34,6 +61,7 @@
 
     </LinearLayout>
 
+    <!-- FAB -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"

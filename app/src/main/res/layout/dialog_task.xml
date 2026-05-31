@@ -4,14 +4,17 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="20dp">
+    android:padding="24dp"
+    android:background="#1A2535">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Task Title"
         android:textStyle="bold"
-        android:textSize="14sp"
+        android:textSize="13sp"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="#AAFFFFFF"
         android:layout_marginBottom="6dp"/>
 
     <EditText
@@ -20,20 +23,28 @@
         android:layout_height="wrap_content"
         android:hint="Enter task title..."
         android:inputType="textCapSentences"
-        android:padding="8dp"
-        android:layout_marginBottom="16dp"/>
+        android:padding="12dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#55FFFFFF"
+        android:background="#22FFFFFF"
+        android:layout_marginBottom="20dp"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Priority"
         android:textStyle="bold"
-        android:textSize="14sp"
+        android:textSize="13sp"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="#AAFFFFFF"
         android:layout_marginBottom="6dp"/>
 
     <Spinner
         android:id="@+id/spinnerPriority"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:background="#22FFFFFF"
+        android:padding="8dp"
+        android:popupBackground="#1A2535"/>
 
-</LinearLayout>
+</LinearLayout>S
