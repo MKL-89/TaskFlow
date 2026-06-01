@@ -10,10 +10,19 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/tvDialogTitle"
+        android:text="New Task"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="20dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:text="Task Title"
         android:textStyle="bold"
         android:textSize="13sp"
-        android:fontFamily="sans-serif-medium"
         android:textColor="#AAFFFFFF"
         android:layout_marginBottom="6dp"/>
 
@@ -35,7 +44,6 @@
         android:text="Priority"
         android:textStyle="bold"
         android:textSize="13sp"
-        android:fontFamily="sans-serif-medium"
         android:textColor="#AAFFFFFF"
         android:layout_marginBottom="6dp"/>
 
@@ -47,4 +55,29 @@
         android:padding="8dp"
         android:popupBackground="#1A2535"/>
 
-</LinearLayout>S
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:layout_marginTop="24dp">
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            android:textColor="#7C4DFF"
+            android:background="@android:color/transparent"/>
+
+        <Button
+            android:id="@+id/btnConfirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add"
+            android:textColor="#7C4DFF"
+            android:background="@android:color/transparent"/>
+
+    </LinearLayout>
+
+</LinearLayout>

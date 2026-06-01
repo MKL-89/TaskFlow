@@ -1,11 +1,14 @@
 package com.example.taskflow;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -47,25 +50,17 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnTas
         FloatingActionButton fab = findViewById(R.id.fab);
 
         taskList = loadTasksFromPrefs();
-
         adapter = new TaskAdapter(taskList, this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showAddTaskDialog();
-            }
-        });
-
+        fab.setOnClickListener(v -> showAddTaskDialog());
         updateTaskCount();
     }
 
-    // called when user taps the delete icon
     @Override
     public void onDeleteTask(final int position) {
-        new AlertDialog.Builder(this)
+        new AlertDialog.Builder(this, R.style.DarkDialog)
                 .setTitle("Delete Task")
                 .setMessage("Remove this task?")
                 .setPositiveButton("Yes", (dialog, which) -> {
@@ -80,7 +75,6 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnTas
                 .show();
     }
 
-    // called when checkbox is ticked or unticked
     @Override
     public void onToggleComplete(int position, boolean isChecked) {
         taskList.get(position).setCompleted(isChecked);
@@ -90,76 +84,86 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnTas
         updateTaskCount();
     }
 
-    // called on long press to open the edit screen
     @Override
     public void onEditTask(int position) {
         showEditTaskDialog(position);
     }
 
-    // dialog for adding a brand new task
     private void showAddTaskDialog() {
-        View dialogView = buildDialogView(null);
-        final EditText etTitle = dialogView.findViewById(R.id.etTaskTitle);
-        final Spinner  spinner = dialogView.findViewById(R.id.spinnerPriority);
+        Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_task);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
-        new AlertDialog.Builder(this)
-                .setTitle("New Task")
-                .setView(dialogView)
-                .setPositiveButton("Add", (dialog, which) -> {
-                    String title    = etTitle.getText().toString().trim();
-                    String priority = spinner.getSelectedItem().toString();
+        TextView tvTitle    = dialog.findViewById(R.id.tvDialogTitle);
+        EditText etTitle    = dialog.findViewById(R.id.etTaskTitle);
+        Spinner spinner     = dialog.findViewById(R.id.spinnerPriority);
+        Button btnCancel    = dialog.findViewById(R.id.btnCancel);
+        Button btnConfirm   = dialog.findViewById(R.id.btnConfirm);
 
-                    if (title.isEmpty()) {
-                        Toast.makeText(this, "Please enter a title", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
+        tvTitle.setText("New Task");
+        btnConfirm.setText("Add");
+        setupSpinner(spinner, null);
 
-                    taskList.add(new Task(title, priority));
-                    sortTasks();
-                    adapter.notifyDataSetChanged();
-                    saveTasksToPrefs();
-                    updateTaskCount();
-                })
-                .setNegativeButton("Cancel", null)
-                .show();
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
+        btnConfirm.setOnClickListener(v -> {
+            String title    = etTitle.getText().toString().trim();
+            String priority = spinner.getSelectedItem().toString();
+            if (title.isEmpty()) {
+                Toast.makeText(this, "Please enter a title", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            taskList.add(new Task(title, priority));
+            sortTasks();
+            adapter.notifyDataSetChanged();
+            saveTasksToPrefs();
+            updateTaskCount();
+            dialog.dismiss();
+        });
+
+        dialog.show();
     }
 
-    // dialog for editing an existing task - fields are pre filled
     private void showEditTaskDialog(final int position) {
         Task task = taskList.get(position);
-        View dialogView = buildDialogView(task);
-        final EditText etTitle = dialogView.findViewById(R.id.etTaskTitle);
-        final Spinner  spinner = dialogView.findViewById(R.id.spinnerPriority);
 
-        new AlertDialog.Builder(this)
-                .setTitle("Edit Task")
-                .setView(dialogView)
-                .setPositiveButton("Save", (dialog, which) -> {
-                    String title    = etTitle.getText().toString().trim();
-                    String priority = spinner.getSelectedItem().toString();
+        Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_task);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
-                    if (title.isEmpty()) {
-                        Toast.makeText(this, "Title cannot be empty", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
+        TextView tvTitle    = dialog.findViewById(R.id.tvDialogTitle);
+        EditText etTitle    = dialog.findViewById(R.id.etTaskTitle);
+        Spinner spinner     = dialog.findViewById(R.id.spinnerPriority);
+        Button btnCancel    = dialog.findViewById(R.id.btnCancel);
+        Button btnConfirm   = dialog.findViewById(R.id.btnConfirm);
 
-                    task.setTitle(title);
-                    task.setPriority(priority);
-                    sortTasks();
-                    adapter.notifyDataSetChanged();
-                    saveTasksToPrefs();
-                    Toast.makeText(this, "Task updated", Toast.LENGTH_SHORT).show();
-                })
-                .setNegativeButton("Cancel", null)
-                .show();
+        tvTitle.setText("Edit Task");
+        btnConfirm.setText("Save");
+        setupSpinner(spinner, task);
+        etTitle.setText(task.getTitle());
+
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
+        btnConfirm.setOnClickListener(v -> {
+            String title    = etTitle.getText().toString().trim();
+            String priority = spinner.getSelectedItem().toString();
+            if (title.isEmpty()) {
+                Toast.makeText(this, "Title cannot be empty", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            task.setTitle(title);
+            task.setPriority(priority);
+            sortTasks();
+            adapter.notifyDataSetChanged();
+            saveTasksToPrefs();
+            Toast.makeText(this, "Task updated", Toast.LENGTH_SHORT).show();
+            dialog.dismiss();
+        });
+
+        dialog.show();
     }
 
-    // builds the dialog layout and optionally pre fills it for editing
-    private View buildDialogView(Task existing) {
-        View view = LayoutInflater.from(this).inflate(R.layout.dialog_task, null);
-        EditText etTitle = view.findViewById(R.id.etTaskTitle);
-        Spinner  spinner = view.findViewById(R.id.spinnerPriority);
-
+    private void setupSpinner(Spinner spinner, Task existing) {
         String[] options = {"High", "Medium", "Low"};
         ArrayAdapter<String> sa = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, options);
@@ -167,7 +171,6 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnTas
         spinner.setAdapter(sa);
 
         if (existing != null) {
-            etTitle.setText(existing.getTitle());
             for (int i = 0; i < options.length; i++) {
                 if (options[i].equals(existing.getPriority())) {
                     spinner.setSelection(i);
@@ -175,10 +178,8 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnTas
                 }
             }
         }
-        return view;
     }
 
-    // incomplete tasks stay at top, completed go to the bottom
     private void sortTasks() {
         Collections.sort(taskList, new Comparator<Task>() {
             @Override
@@ -188,7 +189,6 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnTas
         });
     }
 
-    // counts tasks that are not yet done
     private void updateTaskCount() {
         int remaining = 0;
         for (Task t : taskList) {
@@ -197,7 +197,6 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnTas
         tvTaskCount.setText(remaining + (remaining == 1 ? " task remaining" : " tasks remaining"));
     }
 
-    // saves the full task list as a JSON string
     private void saveTasksToPrefs() {
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         JSONArray arr = new JSONArray();
@@ -216,7 +215,6 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnTas
         prefs.edit().putString(TASKS_KEY, arr.toString()).apply();
     }
 
-    // reads saved tasks back from SharedPreferences on startup
     private List<Task> loadTasksFromPrefs() {
         List<Task> list = new ArrayList<>();
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);

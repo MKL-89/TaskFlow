@@ -51,13 +51,17 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         } else {
             holder.tvTitle.setPaintFlags(
                     holder.tvTitle.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG);
-            holder.tvTitle.setTextColor(Color.BLACK);
+            holder.tvTitle.setTextColor(Color.WHITE); // ✅ FIXED: was Color.BLACK
         }
 
         holder.cbComplete.setOnCheckedChangeListener(null);
         holder.cbComplete.setChecked(task.isCompleted());
-        holder.cbComplete.setOnCheckedChangeListener((btn, isChecked) ->
-                listener.onToggleComplete(holder.getAdapterPosition(), isChecked));
+        holder.cbComplete.setOnCheckedChangeListener((btn, isChecked) -> { // ✅ FIXED
+            int pos = holder.getAdapterPosition();
+            if (pos != RecyclerView.NO_ID && pos != -1) {
+                listener.onToggleComplete(pos, isChecked);
+            }
+        });
 
         switch (task.getPriority()) {
             case "High":
