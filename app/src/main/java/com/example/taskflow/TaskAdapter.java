@@ -22,8 +22,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         void onEditTask(int position);
     }
 
-    private List<Task> taskList;
-    private OnTaskActionListener listener;
+    private final List<Task> taskList;
+    private final OnTaskActionListener listener;
 
     public TaskAdapter(List<Task> taskList, OnTaskActionListener listener) {
         this.taskList = taskList;
@@ -56,31 +56,38 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
         holder.cbComplete.setOnCheckedChangeListener(null);
         holder.cbComplete.setChecked(task.isCompleted());
-        holder.cbComplete.setOnCheckedChangeListener((btn, isChecked) -> { // ✅ FIXED
-            int pos = holder.getAdapterPosition();
-            if (pos != RecyclerView.NO_ID && pos != -1) {
+        holder.cbComplete.setOnCheckedChangeListener((btn, isChecked) -> {
+            int pos = holder.getBindingAdapterPosition();
+            if (pos != RecyclerView.NO_POSITION) {
                 listener.onToggleComplete(pos, isChecked);
             }
         });
 
+        int priorityColor;
         switch (task.getPriority()) {
             case "High":
-                holder.viewPriorityDot.setBackgroundColor(Color.parseColor("#F44336"));
+                priorityColor = Color.parseColor("#FF9800"); // Orange
                 break;
             case "Medium":
-                holder.viewPriorityDot.setBackgroundColor(Color.parseColor("#FF9800"));
+                priorityColor = Color.parseColor("#FFEB3B"); // Yellow
                 break;
             case "Low":
-                holder.viewPriorityDot.setBackgroundColor(Color.parseColor("#4CAF50"));
+                priorityColor = Color.parseColor("#4CAF50"); // Green
+                break;
+            default:
+                priorityColor = Color.GRAY;
                 break;
         }
+
+        holder.viewPriorityBar.setBackgroundColor(priorityColor);
         holder.tvPriority.setText(task.getPriority());
+        holder.tvPriority.setTextColor(priorityColor);
 
         holder.btnDelete.setOnClickListener(v ->
-                listener.onDeleteTask(holder.getAdapterPosition()));
+                listener.onDeleteTask(holder.getBindingAdapterPosition()));
 
         holder.itemView.setOnLongClickListener(v -> {
-            listener.onEditTask(holder.getAdapterPosition());
+            listener.onEditTask(holder.getBindingAdapterPosition());
             return true;
         });
     }
@@ -94,7 +101,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         TextView tvTitle, tvPriority;
         CheckBox cbComplete;
         ImageButton btnDelete;
-        View viewPriorityDot;
+        View viewPriorityBar;
 
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -102,7 +109,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             tvPriority      = itemView.findViewById(R.id.tvPriority);
             cbComplete      = itemView.findViewById(R.id.cbComplete);
             btnDelete       = itemView.findViewById(R.id.btnDelete);
-            viewPriorityDot = itemView.findViewById(R.id.viewPriorityDot);
+            viewPriorityBar = itemView.findViewById(R.id.viewPriorityBar);
         }
     }
 }

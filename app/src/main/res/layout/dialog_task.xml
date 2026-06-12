@@ -5,14 +5,14 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="24dp"
-    android:background="#1A2535">
+    android:background="@color/card_bg">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tvDialogTitle"
         android:text="New Task"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/text_primary"
         android:textSize="20sp"
         android:textStyle="bold"
         android:layout_marginBottom="20dp"/>
@@ -23,7 +23,7 @@
         android:text="Task Title"
         android:textStyle="bold"
         android:textSize="13sp"
-        android:textColor="#AAFFFFFF"
+        android:textColor="@color/text_secondary"
         android:layout_marginBottom="6dp"/>
 
     <EditText
@@ -33,9 +33,9 @@
         android:hint="Enter task title..."
         android:inputType="textCapSentences"
         android:padding="12dp"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/text_primary"
         android:textColorHint="#55FFFFFF"
-        android:background="#22FFFFFF"
+        android:background="@drawable/search_bg"
         android:layout_marginBottom="20dp"/>
 
     <TextView
@@ -44,16 +44,16 @@
         android:text="Priority"
         android:textStyle="bold"
         android:textSize="13sp"
-        android:textColor="#AAFFFFFF"
+        android:textColor="@color/text_secondary"
         android:layout_marginBottom="6dp"/>
 
     <Spinner
         android:id="@+id/spinnerPriority"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#22FFFFFF"
+        android:background="@drawable/search_bg"
         android:padding="8dp"
-        android:popupBackground="#1A2535"/>
+        android:popupBackground="@color/card_bg"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -67,16 +67,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Cancel"
-            android:textColor="#7C4DFF"
-            android:background="@android:color/transparent"/>
+            android:textColor="@color/colorAccent"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            style="@style/Widget.MaterialComponents.Button.TextButton"/>
 
         <Button
             android:id="@+id/btnConfirm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Add"
-            android:textColor="#7C4DFF"
-            android:background="@android:color/transparent"/>
+            android:textColor="@color/colorAccent"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            style="@style/Widget.MaterialComponents.Button.TextButton"/>
 
     </LinearLayout>
 

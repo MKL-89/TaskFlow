@@ -4,75 +4,88 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="10dp"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="6dp"
-    app:cardBackgroundColor="#CC1E2D3D">
+    android:layout_marginBottom="12dp"
+    android:layout_marginHorizontal="4dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="2dp"
+    app:cardBackgroundColor="@color/card_bg">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:padding="14dp">
+        android:layout_height="wrap_content">
 
-        <!-- Checkbox -->
-        <CheckBox
-            android:id="@+id/cbComplete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:buttonTint="#6C63FF"
-            android:layout_marginEnd="8dp"/>
-
-        <!-- Priority Dot -->
+        <!-- Priority Bar -->
         <View
-            android:id="@+id/viewPriorityDot"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
-            android:background="@drawable/circle_dot"
-            android:layout_marginEnd="12dp"/>
+            android:id="@+id/viewPriorityBar"
+            android:layout_width="6dp"
+            android:layout_height="0dp"
+            android:background="@color/colorAccent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
 
-        <!-- Task Text Column -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="16dp"
+            app:layout_constraintStart_toEndOf="@id/viewPriorityBar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
 
-            <!-- Task Title -->
-            <TextView
-                android:id="@+id/tvTaskTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Task Title"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:fontFamily="sans-serif-medium"
-                android:textColor="#EEFFFFFF"/>
-
-            <!-- Priority Label -->
-            <TextView
-                android:id="@+id/tvPriority"
+            <!-- Checkbox -->
+            <CheckBox
+                android:id="@+id/cbComplete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Medium"
-                android:textSize="12sp"
-                android:fontFamily="sans-serif-light"
-                android:textColor="#99FFFFFF"
-                android:layout_marginTop="2dp"/>
+                android:buttonTint="@color/colorAccent"
+                android:layout_marginEnd="12dp"/>
+
+            <!-- Task Text Column -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <!-- Task Title -->
+                <TextView
+                    android:id="@+id/tvTaskTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Task Title"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_primary"/>
+
+                <!-- Priority Label -->
+                <TextView
+                    android:id="@+id/tvPriority"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="High"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textAllCaps="true"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/colorAccent"/>
+
+            </LinearLayout>
+
+            <!-- Delete Button -->
+            <ImageButton
+                android:id="@+id/btnDelete"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@android:drawable/ic_menu_delete"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Delete task"
+                android:tint="#CCF44336"/>
 
         </LinearLayout>
 
-        <!-- Delete Button -->
-        <ImageButton
-            android:id="@+id/btnDelete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@android:drawable/ic_menu_delete"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Delete task"
-            android:tint="#CCF44336"/>
-
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>

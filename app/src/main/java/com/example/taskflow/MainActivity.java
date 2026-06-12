@@ -22,12 +22,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.tabs.TabLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -43,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnTas
     private List<Task> filteredList;
     private TextView tvTaskCount;
     private EditText etSearch;
+    private int currentFilterPosition = 0; // 0: All, 1: Active, 2: Completed
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +55,11 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnTas
         tvTaskCount  = findViewById(R.id.tvTaskCount);
         recyclerView = findViewById(R.id.recyclerView);
         etSearch     = findViewById(R.id.etSearch);
+        TextView tvGreeting = findViewById(R.id.tvGreeting);
         FloatingActionButton fab = findViewById(R.id.fab);
+        TabLayout filterTabs = findViewById(R.id.filterTabs);
+
+        setGreeting(tvGreeting);
 
         taskList     = loadTasksFromPrefs();
         filteredList = new ArrayList<>(taskList);
@@ -68,21 +75,48 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnTas
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
-                filterTasks(s.toString());
+                applyFilters();
             }
             @Override public void afterTextChanged(Editable s) {}
         });
+
+        filterTabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                currentFilterPosition = tab.getPosition();
+                applyFilters();
+            }
+
+            @Override public void onTabUnselected(TabLayout.Tab tab) {}
+            @Override public void onTabReselected(TabLayout.Tab tab) {}
+        });
     }
 
-    private void filterTasks(String query) {
+    private void setGreeting(TextView tvGreeting) {
+        int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        String greeting;
+        if (hour < 12) greeting = "Good Morning!";
+        else if (hour < 17) greeting = "Good Afternoon!";
+        else greeting = "Good Evening!";
+        tvGreeting.setText(greeting + " Let's be productive.");
+    }
+
+    private void applyFilters() {
+        String query = etSearch.getText().toString().toLowerCase();
         filteredList.clear();
-        if (query.isEmpty()) {
-            filteredList.addAll(taskList);
-        } else {
-            for (Task t : taskList) {
-                if (t.getTitle().toLowerCase().contains(query.toLowerCase())) {
-                    filteredList.add(t);
-                }
+
+        for (Task t : taskList) {
+            boolean matchesSearch = t.getTitle().toLowerCase().contains(query);
+            boolean matchesTab = true;
+
+            if (currentFilterPosition == 1) { // Active
+                matchesTab = !t.isCompleted();
+            } else if (currentFilterPosition == 2) { // Completed
+                matchesTab = t.isCompleted();
+            }
+
+            if (matchesSearch && matchesTab) {
+                filteredList.add(t);
             }
         }
         adapter.notifyDataSetChanged();
@@ -111,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnTas
     public void onToggleComplete(int position, boolean isChecked) {
         filteredList.get(position).setCompleted(isChecked);
         sortTasks();
-        filterTasks(etSearch.getText().toString());
+        applyFilters();
         saveTasksToPrefs();
         updateTaskCount();
     }
@@ -147,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnTas
             }
             taskList.add(new Task(title, priority));
             sortTasks();
-            filterTasks(etSearch.getText().toString());
+            applyFilters();
             saveTasksToPrefs();
             updateTaskCount();
             dialog.dismiss();
@@ -186,7 +220,7 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnTas
             task.setTitle(title);
             task.setPriority(priority);
             sortTasks();
-            filterTasks(etSearch.getText().toString());
+            applyFilters();
             saveTasksToPrefs();
             Toast.makeText(this, "Task updated", Toast.LENGTH_SHORT).show();
             dialog.dismiss();

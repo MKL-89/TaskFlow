@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#FF9800</color>
+    <color name="colorPrimaryDark">#121212</color>
+    <color name="colorAccent">#FF9800</color>
+
+    <color name="bg_dark">#121212</color>
+    <color name="card_bg">#1E1E1E</color>
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#B0B0B0</color>
+
+    <color name="gradient_start">#FF9800</color>
+    <color name="gradient_end">#F57C00</color>
 </resources>
